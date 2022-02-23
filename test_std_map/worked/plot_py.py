@@ -70,10 +70,12 @@ while True:
     
 file_data_py.close()
 
+'''
 print(data_x_c)
 print(data_y_c)
 print(data_x_py)
 print(data_y_py)
+'''
 
 plt.subplot(1, 2, 2)
 plt.title("The dependence of the size on the number of elements")
