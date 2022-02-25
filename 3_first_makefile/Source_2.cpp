@@ -44,7 +44,5 @@ int main(int argc, char** argv)
 
     cout << "Second program end" << endl;
 
-    getchar();
-
     return 0;
 }

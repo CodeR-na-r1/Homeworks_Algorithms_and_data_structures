@@ -13,11 +13,11 @@ clear:
 	del *.0 *.gch *.txt
 
 run_first:
-	Source_1.exe 13 out.txt
+	Source_1 13 out.txt
 
 run_second:
-	Source_2.exe out.txt
+	Source_2 out.txt
 
 run: all
-	Source_1.exe 13 out.txt
-	Source_2.exe out.txt
+	Source_1 13 out.txt
+	Source_2 out.txt

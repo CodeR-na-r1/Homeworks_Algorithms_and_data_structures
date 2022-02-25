@@ -10,7 +10,7 @@ using namespace std;
 
 float my_random(const float min, const float max)
 {
-    return min + (static_cast<float>((float)rand() / RAND_MAX)) * (min - max);
+    return min + (static_cast<float>((float)rand() / RAND_MAX)) * (max - min);
 }
 
 int main(int argc, char** argv)
@@ -43,8 +43,6 @@ int main(int argc, char** argv)
     cout << "First program end" << endl;
 
     cout << "\n<------------------>\n" << endl;
-
-    getchar();
 
     return 0;
 }
