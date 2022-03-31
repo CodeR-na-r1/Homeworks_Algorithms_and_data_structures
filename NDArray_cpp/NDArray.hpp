@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include <type_traits>
 
@@ -14,7 +14,7 @@ class NDArray <T, typename std::enable_if<std::is_same<T, int>::value || std::is
 {
 public:
 
-	NDArray(int size, T fill = 0)	 // Создание пустого массива заданного размера and Создание массива заполненного нулями
+	NDArray(int size, T fill = 0)	 // РЎРѕР·РґР°РЅРёРµ РїСѓСЃС‚РѕРіРѕ РјР°СЃСЃРёРІР° Р·Р°РґР°РЅРЅРѕРіРѕ СЂР°Р·РјРµСЂР° and РЎРѕР·РґР°РЅРёРµ РјР°СЃСЃРёРІР° Р·Р°РїРѕР»РЅРµРЅРЅРѕРіРѕ РЅСѓР»СЏРјРё
 	{
 		this->ptr = new T[size];
 		this->size = size;
@@ -31,7 +31,7 @@ public:
 		return;
 	}
 
-	NDArray(int size_rows, int size_cols, T fill) : NDArray(size_rows * size_cols, fill)	 // Создание пустого двумерного массива заданного размера and Создание двумерного массива заполненного нулями
+	NDArray(int size_rows, int size_cols, T fill) : NDArray(size_rows * size_cols, fill)	 // РЎРѕР·РґР°РЅРёРµ РїСѓСЃС‚РѕРіРѕ РґРІСѓРјРµСЂРЅРѕРіРѕ РјР°СЃСЃРёРІР° Р·Р°РґР°РЅРЅРѕРіРѕ СЂР°Р·РјРµСЂР° and РЎРѕР·РґР°РЅРёРµ РґРІСѓРјРµСЂРЅРѕРіРѕ РјР°СЃСЃРёРІР° Р·Р°РїРѕР»РЅРµРЅРЅРѕРіРѕ РЅСѓР»СЏРјРё
 	{
 		this->ndim = size_rows > 1 ? 2 : 1;
 		this->shape.first = size_rows;
@@ -40,12 +40,12 @@ public:
 		return;
 	}
 
-	static NDArray ones(int size_rows, int size_cols)	 // Создание массива заполненного единицами
+	static NDArray ones(int size_rows, int size_cols)	 // РЎРѕР·РґР°РЅРёРµ РјР°СЃСЃРёРІР° Р·Р°РїРѕР»РЅРµРЅРЅРѕРіРѕ РµРґРёРЅРёС†Р°РјРё
 	{
 		return NDArray(size_rows, size_cols, 1);
 	}
 
-	static NDArray random_values(int size_rows, int size_cols)	 // Создание массива заполненного случайными значениям
+	static NDArray random_values(int size_rows, int size_cols)	 // РЎРѕР·РґР°РЅРёРµ РјР°СЃСЃРёРІР° Р·Р°РїРѕР»РЅРµРЅРЅРѕРіРѕ СЃР»СѓС‡Р°Р№РЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРј
 	{
 		NDArray res(size_rows, size_cols, 0);
 
@@ -64,12 +64,12 @@ public:
 	{
 		if (this->ndim == 1)
 		{
-			assert((indexes.first + indexes.second) < this->size);	// Так можно передать индекс и в первом и во втором элементе пары
+			assert((indexes.first + indexes.second) < this->size);	// РўР°Рє РјРѕР¶РЅРѕ РїРµСЂРµРґР°С‚СЊ РёРЅРґРµРєСЃ Рё РІ РїРµСЂРІРѕРј Рё РІРѕ РІС‚РѕСЂРѕРј СЌР»РµРјРµРЅС‚Рµ РїР°СЂС‹
 			return this->ptr[indexes.first + indexes.second];
 		}
 		else if (this->ndim == 2)
 		{
-			assert((indexes.first * this->shape.second + indexes.second) < this->size);	// Так можно передать индекс и в первом и во втором элементе пары
+			assert((indexes.first * this->shape.second + indexes.second) < this->size);	// РўР°Рє РјРѕР¶РЅРѕ РїРµСЂРµРґР°С‚СЊ РёРЅРґРµРєСЃ Рё РІ РїРµСЂРІРѕРј Рё РІРѕ РІС‚РѕСЂРѕРј СЌР»РµРјРµРЅС‚Рµ РїР°СЂС‹
 			return this->ptr[indexes.first * this->shape.second + indexes.second];
 		}
 		else
