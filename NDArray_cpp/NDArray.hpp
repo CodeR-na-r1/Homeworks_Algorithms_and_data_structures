@@ -40,6 +40,23 @@ public:
 		return;
 	}
 
+	NDArray(const NDArray<T>& other)
+	{
+		this->ptr = new T[other.size];
+		this->size = other.size;
+
+		this->ndim = other.ndim;
+		this->shape.first = other.shape.first;
+		this->shape.second = other.shape.second;
+
+		for (int i = 0; i < this->size; i++)
+		{
+			this->ptr[i] = other.ptr[i];
+		}
+
+		return;
+	}
+
 	static NDArray ones(int size_rows, int size_cols)	 // Создание массива заполненного единицами
 	{
 		return NDArray(size_rows, size_cols, 1);
@@ -60,7 +77,60 @@ public:
 		return res;
 	}
 
-	T& operator[](std::pair<int, int> indexes)
+	static NDArray random_values(int size_cols)
+	{
+		return NDArray::random_values(1, size_cols);
+	}
+
+	NDArray operator+(NDArray& other)
+	{
+		return element_wise_operator(other, [](T a, T b) {return a + b; });
+	}
+
+	NDArray operator-(NDArray& other)
+	{
+		return element_wise_operator(other, [](T a, T b) {return a - b; });
+	}
+
+	NDArray operator*(NDArray& other)
+	{
+		if (this->ndim == 2)
+		{
+			int s;
+			//return 0;
+		}
+		else if (this->ndim == 1)
+		{
+			NDArray res = element_wise_operator(other, [](T a, T b) {return a * b; });
+
+			return NDArray(1, res.summ());
+		}
+		else
+		{
+			throw "Current NDIM not supported in operator*";
+		}
+
+		return NDArray(1, 0);
+	}
+
+	NDArray operator/(NDArray& other)
+	{
+		return element_wise_operator(other, [](T a, T b) {return a / b; });
+	}
+
+	T summ(T start_init = 0)
+	{
+		T res(start_init);
+
+		for (int i = 0; i < this->size; i++)
+		{
+			res += (*this)[i];
+		}
+
+		return res;
+	}
+
+	T& operator[](std::pair<int, int> indexes) const
 	{
 		if (this->ndim == 1)
 		{
@@ -78,7 +148,7 @@ public:
 		}
 	}
 
-	T& operator[](int index)
+	T& operator[](int index) const
 	{
 		if (this->ndim == 1)
 		{
@@ -96,14 +166,29 @@ public:
 		return this->size;
 	}
 
-	int get_size_rows()
+	int get_size_rows() const
 	{
 		return this->shape.first;
 	}
 
-	int get_size_cols()
+	int get_size_cols() const
 	{
 		return this->shape.second;
+	}
+
+	friend std::ostream& operator<<(std::ostream& out, const NDArray<T>& arr)
+	{
+		for (int i = 0; i < arr.get_size_rows(); i++)
+		{
+			out << "[ " << arr[0];
+			for (int j = 1; j < arr.get_size_cols(); j++)
+			{
+				out << ", " << arr[std::make_pair(i, j)];
+			}
+			out << " ]\n";
+		}
+
+		return out;
 	}
 
 	~NDArray()
@@ -119,4 +204,18 @@ private:
 
 	int ndim;
 	std::pair<int, int> shape;	// first == quantity rows and second == quantity columns || vector
+
+	NDArray element_wise_operator(NDArray& other, T(*func)(T, T))
+	{
+		assert(this->shape == other.shape && "Shapes are not equivalent");
+
+		NDArray res(this->size);
+
+		for (int i = 0; i < this->size; i++)
+		{
+			res[i] = func((*this)[i], other[i]);
+		}
+
+		return res;
+	}
 };
