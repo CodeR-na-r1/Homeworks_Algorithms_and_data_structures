@@ -33,15 +33,29 @@ int main()
 
 	std::cout << "Arr == \n" << arr;
 	auto row = arr.get_row(2);
-	std::cout << "\n3 row of arr" << row;
+	std::cout << "\n3 row of arr == " << row;
 	arr[std::make_pair(2, 0)] = 1;
-	std::cout << "\n3 row of arr" << row << std::endl;
+	std::cout << "\n3 row of arr == " << row << std::endl;
 
 	std::cout << "Arr == \n" << arr;
 	auto col = arr.get_col(0);
-	std::cout << "\n1 col of arr" << col << std::endl;
+	std::cout << "\n1 col of arr == " << col << std::endl;
 
 	std::cout << "Copy_arr == \n" << copy_arr;
+	
+	arr[pair<int, int>(0, 0)] = 0;
+	arr[pair<int, int>(0, 1)] = 1;
+	arr[pair<int, int>(0, 2)] = 2;
+	arr[pair<int, int>(1, 0)] = 3;
+	arr[pair<int, int>(1, 1)] = 4;
+	arr[pair<int, int>(1, 2)] = 5;
+	arr[pair<int, int>(2, 0)] = 6;
+	arr[pair<int, int>(2, 1)] = 7;
+	arr[pair<int, int>(2, 2)] = 8;
+	std::cout << "Arr == \n" << arr;
+	std::cout << "Transposed arr == \n" << arr.transpose();
+
+	std::cout << "arr * transposed arr == \n" << arr * arr.transpose();
 
 	//std::cout << arr[1];
 	//NDArray<int>::random_values(1);

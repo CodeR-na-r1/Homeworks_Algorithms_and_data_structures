@@ -116,12 +116,23 @@ public:
 		return element_wise_operator(other, [](T a, T b) {return a - b; });
 	}
 
-	NDArray operator*(NDArray& other)
+	NDArray operator*(NDArray other)
 	{
 		if (this->ndim == 2)
 		{
-			int s;
-			//return 0;
+			assert(this->shape.second == other.shape.first);
+
+			NDArray res(this->shape.first, other.shape.second, 0);
+
+			for (int i = 0; i < this->shape.first; i++)
+			{
+				for (int j = 0; j < other.shape.second; j++)
+				{
+					res.get_row(i)[j] = (this->get_row(i) * other.get_col(j))[0];
+				}
+			}
+
+			return res;
 		}
 		else if (this->ndim == 1)
 		{
@@ -191,6 +202,18 @@ public:
 		{
 			throw "Current NDIM not supported in operator [] with one parameter";
 		}
+	}
+
+	NDArray transpose()
+	{
+		NDArray res(this->shape.second, this->shape.first, 0);
+
+		for (int i = 0; i < this->shape.second; i++)
+		{
+			res.get_row(i) = this->get_col(i);
+		}
+
+		return res;
 	}
 
 	NDArray& operator=(const NDArray& other)
