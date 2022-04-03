@@ -22,12 +22,21 @@ int main()
 		arr_1[i] = i;
 		arr_2[i] = i + 1;
 	}
-
-	std::cout << "Arr 1 == " << arr_1 << std::endl;
+	
+	std::cout << "Arr 1 == " << arr_1;
 	std::cout << "Arr 2 == " << arr_2 << std::endl;
-
 	auto res = arr_1 * arr_2;
 	std::cout << "Res multiply === " << res << std::endl;
+
+	std::cout << "Arr == \n" << arr;
+	auto row = arr.get_row(2);
+	std::cout << "\n3 row of arr" << row;
+	arr[std::make_pair(2, 0)] = 1;
+	std::cout << "\n3 row of arr" << row << std::endl;
+
+	std::cout << "Arr == \n" << arr;
+	auto col = arr.get_col(0);
+	std::cout << "\n1 col of arr" << col << std::endl;
 
 	//std::cout << arr[1];
 	//NDArray<int>::random_values(1);

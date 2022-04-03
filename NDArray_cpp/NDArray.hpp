@@ -3,6 +3,7 @@
 #include <type_traits>
 
 #include <iostream>
+#include <vector>
 
 #include <cassert>
 
@@ -16,8 +17,18 @@ public:
 
 	NDArray(int size, T fill = 0)	 // Создание пустого массива заданного размера and Создание массива заполненного нулями
 	{
-		this->ptr = new T[size];
+		if (size)
+		{
+			this->ptr = new T[size];
+		}
+		else
+		{
+			this->ptr = nullptr;
+		}
+
 		this->size = size;
+
+		this->offset = nullptr;
 
 		this->ndim = 1;
 		this->shape.first = 1;
@@ -42,16 +53,29 @@ public:
 
 	NDArray(const NDArray<T>& other)
 	{
-		this->ptr = new T[other.size];
 		this->size = other.size;
 
 		this->ndim = other.ndim;
 		this->shape.first = other.shape.first;
 		this->shape.second = other.shape.second;
 
-		for (int i = 0; i < this->size; i++)
+		if (other.offset == nullptr)
 		{
-			this->ptr[i] = other.ptr[i];
+			this->ptr = new T[other.size];
+			this->offset = nullptr;
+			for (int i = 0; i < this->size; i++)
+			{
+				this->ptr[i] = other.ptr[i];
+			}
+		}
+		else
+		{
+			this->ptr = other.ptr;
+			this->offset = new std::vector<int>;
+			for (int i = 0; i < other.offset->size(); i++)
+			{
+				this->offset->push_back(other.offset->at(i));
+			}
 		}
 
 		return;
@@ -135,7 +159,7 @@ public:
 		if (this->ndim == 1)
 		{
 			assert((indexes.first + indexes.second) < this->size);	// Так можно передать индекс и в первом и во втором элементе пары
-			return this->ptr[indexes.first + indexes.second];
+			return this->operator[](indexes.first + indexes.second);
 		}
 		else if (this->ndim == 2)
 		{
@@ -153,12 +177,56 @@ public:
 		if (this->ndim == 1)
 		{
 			assert(index < this->size);
-			return this->ptr[index];
+
+			if (this->offset == nullptr)
+			{
+				return this->ptr[index];
+			}
+			else
+			{
+				return this->ptr[this->offset->at(index)];
+			}
 		}
 		else
 		{
 			throw "Current NDIM not supported in operator [] with one parameter";
 		}
+	}
+
+	NDArray get_row(int n) const
+	{
+		assert(n < this->shape.first);
+
+		NDArray res(0);
+		res.ptr = this->ptr;
+		res.size = this->shape.second;
+		res.shape.second = res.size;
+		res.offset = new std::vector<int>;
+
+		for (int i = 0; i < this->size; i++)
+		{
+			res.offset->push_back(n * this->shape.second + i);
+		}
+
+		return res;
+	}
+
+	NDArray get_col(int n) const
+	{
+		assert(n < this->shape.second);
+
+		NDArray res(0);
+		res.ptr = this->ptr;
+		res.size = this->shape.first;
+		res.shape.second = res.size;
+		res.offset = new std::vector<int>;
+
+		for (int i = 0; i < this->size; i++)
+		{
+			res.offset->push_back(i * this->shape.second + n);
+		}
+
+		return res;
 	}
 
 	int get_size()
@@ -180,7 +248,7 @@ public:
 	{
 		for (int i = 0; i < arr.get_size_rows(); i++)
 		{
-			out << "[ " << arr[0];
+			out << "[ " << arr[std::make_pair(i, 0)];
 			for (int j = 1; j < arr.get_size_cols(); j++)
 			{
 				out << ", " << arr[std::make_pair(i, j)];
@@ -193,7 +261,10 @@ public:
 
 	~NDArray()
 	{
-		delete[] this->ptr;
+		if (this->offset == nullptr)
+		{
+			delete[] this->ptr;
+		}
 
 		return;
 	}
@@ -201,6 +272,8 @@ public:
 private:
 	T* ptr;
 	int size;
+
+	std::vector<int>* offset;
 
 	int ndim;
 	std::pair<int, int> shape;	// first == quantity rows and second == quantity columns || vector
