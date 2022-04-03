@@ -28,6 +28,9 @@ int main()
 	auto res = arr_1 * arr_2;
 	std::cout << "Res multiply === " << res << std::endl;
 
+	NDArray<int> copy_arr = arr;
+	std::cout << "SAVED Copy_arr\n";
+
 	std::cout << "Arr == \n" << arr;
 	auto row = arr.get_row(2);
 	std::cout << "\n3 row of arr" << row;
@@ -37,6 +40,8 @@ int main()
 	std::cout << "Arr == \n" << arr;
 	auto col = arr.get_col(0);
 	std::cout << "\n1 col of arr" << col << std::endl;
+
+	std::cout << "Copy_arr == \n" << copy_arr;
 
 	//std::cout << arr[1];
 	//NDArray<int>::random_values(1);

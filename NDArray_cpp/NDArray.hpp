@@ -193,6 +193,18 @@ public:
 		}
 	}
 
+	NDArray& operator=(const NDArray& other)
+	{
+		assert(this->shape == other.shape);
+
+		for (int i = 0; i < this->size; i++)
+		{
+			(*this)[i] = other[i];
+		}
+
+		return *this;
+	}
+
 	NDArray get_row(int n) const
 	{
 		assert(n < this->shape.first);
