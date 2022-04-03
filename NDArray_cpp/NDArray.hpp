@@ -157,12 +157,50 @@ public:
 	{
 		T res(start_init);
 
-		for (int i = 0; i < this->size; i++)
+		for (int i = 0; i < this->shape.first; i++)
 		{
-			res += (*this)[i];
+			for (int j = 0; j < this->shape.second; j++)
+			{
+				res += (*this)[std::make_pair(i, j)];
+			}
 		}
 
 		return res;
+	}
+
+	T max()
+	{
+		T  res = (*this)[std::make_pair(0, 0)];
+
+		for (int i = 0; i < this->shape.first; i++)
+		{
+			for (int j = 0; j < this->shape.second; j++)
+			{
+				res = (*this)[std::make_pair(i, j)] > res ? (*this)[std::make_pair(i, j)] : res;
+			}
+		}
+
+		return res;
+	}
+
+	T min()
+	{
+		T  res = (*this)[std::make_pair(0, 0)];
+
+		for (int i = 0; i < this->shape.first; i++)
+		{
+			for (int j = 0; j < this->shape.second; j++)
+			{
+				res = (*this)[std::make_pair(i, j)] < res ? (*this)[std::make_pair(i, j)] : res;
+			}
+		}
+
+		return res;
+	}
+
+	T avg()
+	{
+		return this->summ() / this->size;
 	}
 
 	T& operator[](std::pair<int, int> indexes) const
@@ -283,12 +321,14 @@ public:
 	{
 		for (int i = 0; i < arr.get_size_rows(); i++)
 		{
+			if (i)
+				out << "\n";
 			out << "[ " << arr[std::make_pair(i, 0)];
 			for (int j = 1; j < arr.get_size_cols(); j++)
 			{
 				out << ", " << arr[std::make_pair(i, j)];
 			}
-			out << " ]\n";
+			out << " ]";
 		}
 
 		return out;
